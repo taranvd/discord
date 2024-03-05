@@ -1,18 +1,19 @@
 "use client";
+
 import axios from "axios";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { useModal } from "@/hooks/use-modal-store";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
-import { DialogDescription } from "@radix-ui/react-dialog";
-import { useRouter } from "next/navigation";
 
 export const DeleteServerModal = () => {
   const { isOpen, onClose, type, data } = useModal();
@@ -30,7 +31,6 @@ export const DeleteServerModal = () => {
       await axios.delete(`/api/servers/${server?.id}`);
 
       onClose();
-
       router.refresh();
       router.push("/");
     } catch (error) {
@@ -38,13 +38,10 @@ export const DeleteServerModal = () => {
     } finally {
       setIsLoading(false);
     }
-  };
+  }
 
   return (
-    <Dialog
-      open={isModalOpen}
-      onOpenChange={onClose}
-    >
+    <Dialog open={isModalOpen} onOpenChange={onClose}>
       <DialogContent className="bg-white text-black p-0 overflow-hidden">
         <DialogHeader className="pt-8 px-6">
           <DialogTitle className="text-2xl text-center font-bold">
@@ -52,11 +49,7 @@ export const DeleteServerModal = () => {
           </DialogTitle>
           <DialogDescription className="text-center text-zinc-500">
             Are you sure you want to do this? <br />
-            <span className="text-indigo-500 font-semibold">
-              {server?.name}
-            </span>
-            {"  "}
-            will be permanently deleted.
+            <span className="text-indigo-500 font-semibold">{server?.name}</span> will be permanently deleted.
           </DialogDescription>
         </DialogHeader>
         <DialogFooter className="bg-gray-100 px-6 py-4">
@@ -66,12 +59,12 @@ export const DeleteServerModal = () => {
               onClick={onClose}
               variant="ghost"
             >
-              Cansel
+              Cancel
             </Button>
             <Button
               disabled={isLoading}
-              onClick={onClick}
               variant="primary"
+              onClick={onClick}
             >
               Confirm
             </Button>
@@ -79,5 +72,5 @@ export const DeleteServerModal = () => {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  );
-};
+  )
+}

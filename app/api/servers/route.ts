@@ -11,7 +11,7 @@ export async function POST(req: Request) {
     const profile = await currentProfile();
 
     if (!profile) {
-      return new NextResponse("Unathorized", { status: 401 });
+      return new NextResponse("Unauthorized", { status: 401 });
     }
 
     const server = await db.server.create({
@@ -21,17 +21,16 @@ export async function POST(req: Request) {
         imageUrl,
         inviteCode: uuidv4(),
         channels: {
-          create: [{ name: "general", profileId: profile.id }],
+          create: [
+            { name: "general", profileId: profile.id }
+          ]
         },
         members: {
           create: [
-            {
-              profileId: profile.id,
-              role: MemberRole.ADMIN,
-            },
-          ],
-        },
-      },
+            { profileId: profile.id, role: MemberRole.ADMIN }
+          ]
+        }
+      }
     });
 
     return NextResponse.json(server);
